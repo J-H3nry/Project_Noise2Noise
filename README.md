@@ -14,8 +14,8 @@ This repository contains two independent implementations of the same task:
 
 Developed as part of EE-559 (Deep Learning) at EPFL, spring 2022.
 ## Authors
-[Jonathan](https://github.com/J-H3nry)
-[Malika](https://github.com/inalbon)
+[Jonathan](https://github.com/J-H3nry),
+[Malika](https://github.com/inalbon),
 [Ludovic](https://github.com/ludovicdauvin)
 
 ## The task
@@ -84,8 +84,7 @@ uv sync
 ```
 
 The environment is defined in `pyproject.toml`. A CUDA-enabled PyTorch build is selected through
-the PyTorch index configured there; adapt it to your driver if needed. This project uses python 3.12
-and Pytorch 2.14.1 for Cuda 13.2
+the PyTorch index configured there; adapt it to your driver if needed. This project uses python 3.12 and Pytorch 2.14.1 for Cuda 13.2
 
 ### Data
 
@@ -93,17 +92,32 @@ The datasets are **not included** in this repository. Place `train_data.pkl` and
 at the root of the repository (they are ignored by git).
 
 ### Run
+All the commands below are run from the repository root. By default, the script **loads the saved model and displays the results**; the trainign is opt-in.
 
 ```bash
-# Train and visualize results (mini-project 1)
+# Load the savec model and visualize results (mini-project 1)
 uv run python Miniproject_1/others/main.py
 
-# Train and visualize results (mini-project 2)
+# Load the savec model and visualize results (mini-project 2)
 uv run python Miniproject_2/others/main.py
 
 # Run the layer tests (mini-project 2)
 uv run python Miniproject_2/test_mini_p2.py
+
+# Train for 20 epochs, save the model, then display the results
+uv run python Miniproject_2/others/main.py --train --epochs 20
+
+# Learning-rate grid search (5 epochs per value)
+uv run python Miniproject_2/others/main.py --train --gridsearch --epochs 5
 ```
+
+| Option | Default | Description |
+|---|---|---|
+| `--train` | off | Train the model before evaluating. Without it, the saved model is loaded. |
+| `--gridsearch` | off | Search the best learning rate on the validation set. Requires `--train`. Only for Mini-projet 2|
+| `--epochs N` | `100` | Number of training epochs. |
+
+Run `main.py --help` for the full list.
 
 <!-- TODO: add the possibility to disable training via command line -->
 
@@ -111,8 +125,8 @@ uv run python Miniproject_2/test_mini_p2.py
 
 | Model | Validation PSNR |
 |---|---|
-| Mini-project 1 (PyTorch) | TODO dB |
-| Mini-project 2 (from scratch) | TODO dB |
+| Mini-project 1 (PyTorch) | 25.33 dB |
+| Mini-project 2 (from scratch) | 21.29 dB |
 
 # Results from Mini-project 1
 ![Denoising example](assets/test_results_miniprojet1.png)
@@ -123,8 +137,7 @@ uv run python Miniproject_2/test_mini_p2.py
 ![Denoising example](assets/test_results_miniprojet2.png)
 
 *Mini-project 2: noisy input, denoised output and clean target (validation set).*
-Disclaimer: This result is probably not the best possible using the custom network, the bestmodel2.pth
-was obtained using a simple gridsearch on the Learning rate value.
+Disclaimer: This result is probably not the best possible using the custom network, the bestmodel2.pth was obtained using a simple gridsearch on the Learning rate value.
 
 ## Notes
 
