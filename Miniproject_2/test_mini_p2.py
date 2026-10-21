@@ -474,3 +474,5 @@ test_sigmoid()
 test_MSE()
 test_sequential()
 test_sgd()
+
+print("All tests passed successfully!")

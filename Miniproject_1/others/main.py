@@ -5,6 +5,7 @@ import sys
 import matplotlib.pyplot as plt
 import numpy as np
 import time
+import argparse
 
 
 BASE_DIR = Path(__file__).resolve().parent
@@ -18,7 +19,16 @@ sys.path.insert(0, str(MODEL_DIR))
 from model import Model
 device = torch.device('cuda' if torch.cuda.is_available() else 'cpu')
 
-training = False #if we want to train the model, set it to True, else False
+def parse_args():
+    parser = argparse.ArgumentParser(description="Train or evaluate the model.")
+    parser.add_argument('--train', action='store_true', help="train the model (default: only load the savec model and evaluate)")
+    parser.add_argument('--epochs', type=int, default=100, help="number of epochs for training (default: 100)")
+    return parser.parse_args()
+
+
+args = parse_args()
+training = args.train
+epoch = args.epochs
 
 # load data
 train_input, train_target = torch.load(train_data_path)  # noisy images 1, noisy images 2
@@ -35,7 +45,6 @@ val_target = val_target
 model = Model()
 
 if training:
-    epoch = 100
     start = time.perf_counter()
     model.train(train_input, train_target, epoch)
     stop = time.perf_counter()
@@ -47,6 +56,8 @@ model.load_pretrained_model()
 
 prediction = model.predict(val_input)
 
+psnr = model.psnr(val_target)
+print(f'psnr is {psnr} dB')
 # Show results
 rows = 3
 columns = 10
@@ -72,7 +83,3 @@ for j in range(columns):
 axes[2][0].set_title('Test target')
 
 plt.show()
-
-psnr = model.psnr(val_target)
-print(f'psnr is {psnr} dB')
-print(f'The training is done in {stop - start} seconds')
